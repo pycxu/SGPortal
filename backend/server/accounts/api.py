@@ -8,9 +8,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from .token import CustomTokenGenerator 
+from .token import EmailVerifyTokenGenerator 
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-api = NinjaAPI(title="API_ACC", version="1.0.0")
+api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0")
 
 class SignUpConsumerIn(ModelSchema):
     class Config:
@@ -39,7 +40,7 @@ def create_consumer(request,  payload: SignUpConsumerIn):
         username = new_user.username
         domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
         uid = urlsafe_base64_encode(force_bytes(new_user.pk))
-        token = CustomTokenGenerator.make_token(new_user)
+        token = EmailVerifyTokenGenerator.make_token(new_user)
 
         message = f"Hi {username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
         new_user.email_user('Email verification', message)
@@ -119,8 +120,6 @@ def delete_all_users(request):
     except:
         return 400, {"error": "somthing went wrong"}
 
-    
-
 # @api.post("/signup-banker/", response=, tags=["auth"])
 # def create_banker(request,  payload: )
 
@@ -135,7 +134,7 @@ def verify_email(request,  payload: VerifyEmailIn):
         user = get_user_model().objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
         user = None  
-    if user is not None and CustomTokenGenerator.check_token(user, payload.token):  
+    if user is not None and EmailVerifyTokenGenerator.check_token(user, payload.token):  
         user.is_email_verified = True  
         user.save()
         return 200, {"success": "Email verified"}
@@ -156,7 +155,7 @@ def forget_password(request,  payload: ForgetPassWordIn):
         username = user.username
         domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = CustomTokenGenerator.make_token(user)
+        token = PasswordResetTokenGenerator.make_token(user)
 
         message = f"Hi {username},\nPlease click on the link to reset your password.\nhttp://{domain}/reset-password/{uid}/{token}/ "
         user.email_user('Password reset', message)
@@ -176,7 +175,7 @@ def reset_password(request, payload: ForgetPassWordIn):
         user = get_user_model().objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
         user = None  
-    if user is not None and CustomTokenGenerator.check_token(user, payload.token):  
+    if user is not None and PasswordResetTokenGenerator.check_token(user, payload.token):  
         user.set_password(payload.password)
         user.save()
         return 200, {"success": "Reset password"}
