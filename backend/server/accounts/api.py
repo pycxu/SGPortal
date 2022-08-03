@@ -41,7 +41,7 @@ def create_consumer(request,  payload: SignUpConsumerIn):
         uid = urlsafe_base64_encode(force_bytes(new_user.pk))
         token = CustomTokenGenerator.make_token(new_user)
 
-        message = f"Hi {new_user.username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
+        message = f"Hi {username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
         new_user.email_user('Email verification', message)
         return 200, {"id": new_user.id}
     except:
@@ -133,7 +133,7 @@ def verify_email(request,  payload: VerifyEmailIn):
     try:
         uid = force_str(urlsafe_base64_decode(payload.uidb64))  
         user = get_user_model().objects.get(pk=uid)
-    except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
+    except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
         user = None  
     if user is not None and CustomTokenGenerator.check_token(user, payload.token):  
         user.is_email_verified = True  
@@ -142,8 +142,43 @@ def verify_email(request,  payload: VerifyEmailIn):
     else:
         return 400, {"error": "somthing went wrong"}
 
-# @api.post("/forget-password/", response=, tags=["auth"])
-# def forget_password(request,  payload: )
+class ForgetPassWordIn(Schema):
+    email: str
 
-# @api.post("/reset-password/", response=, tags=["auth"])
-# def reset_password(request, payload: )
+@api.post("/forget-password/", response={200: SuccessOut, 400: ErrorOut}, tags=["auth"])
+def forget_password(request,  payload: ForgetPassWordIn):
+    try:
+        user = get_user_model().objects.get(email=payload.email.lower())
+    except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
+        user = None 
+    if user is not None and user.is_active:
+        # generate reset password link
+        username = user.username
+        domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        token = CustomTokenGenerator.make_token(user)
+
+        message = f"Hi {username},\nPlease click on the link to reset your password.\nhttp://{domain}/reset-password/{uid}/{token}/ "
+        user.email_user('Password reset', message)
+        return 200, {"success": "sent password reset link"}
+    else:
+        return 400, {"error": "somthing went wrong"}
+
+class ForgetPassWordIn(Schema):
+    uidb64: str
+    token: str
+    password: str
+
+@api.post("/reset-password/", response={200: SuccessOut, 400: ErrorOut}, tags=["auth"])
+def reset_password(request, payload: ForgetPassWordIn):
+    try:
+        uid = force_str(urlsafe_base64_decode(payload.uidb64))  
+        user = get_user_model().objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
+        user = None  
+    if user is not None and CustomTokenGenerator.check_token(user, payload.token):  
+        user.set_password(payload.password)
+        user.save()
+        return 200, {"success": "Reset password"}
+    else:
+        return 400, {"error": "somthing went wrong"}
