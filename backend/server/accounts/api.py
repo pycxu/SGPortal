@@ -5,6 +5,10 @@ from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.models import update_last_login
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.encoding import force_bytes, force_str
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from .token import CustomTokenGenerator 
 
 api = NinjaAPI(title="API_ACC", version="1.0.0")
 
@@ -25,15 +29,23 @@ class SuccessOut(Schema):
 @api.post("/signup-consumer/", response={200: SignUpConsumerOut, 400: ErrorOut}, tags=["auth"])
 def create_consumer(request,  payload: SignUpConsumerIn):
     # TODO: email verification
-    new_consumer = get_user_model().objects.create_user(**payload.dict())
-    new_consumer.user_type = 1 
-    new_consumer.save()
-    new_consumer.email_user('subject', 'msg')
-    return 200, {"id": new_consumer.id}
-    # try:
+    try:
+        # create new user
+        new_user = get_user_model().objects.create_user(**payload.dict())
+        new_user.user_type = 1 
+        new_user.save()
 
-    # except:
-    #     return 400, {"error": "somthing went wrong"}
+        # generate email activation link
+        username = new_user.username
+        domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
+        uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+        token = CustomTokenGenerator.make_token(new_user)
+
+        message = f"Hi {new_user.username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
+        new_user.email_user('Email verification', message)
+        return 200, {"id": new_user.id}
+    except:
+        return 400, {"error": "somthing went wrong"}
 
 class LoginIn(ModelSchema):
     class Config:
@@ -113,11 +125,26 @@ def delete_all_users(request):
 # @api.post("/signup-banker/", response=, tags=["auth"])
 # def create_banker(request,  payload: )
 
-# @api.post("/email-verify/", response=, tags=["auth"])
-# def verify_email(request,  payload: )
+class VerifyEmailIn(Schema):
+    uidb64: str
+    token: str
+
+@api.post("/verify-email/", response={200: SuccessOut, 400: ErrorOut}, tags=["auth"])
+def verify_email(request,  payload: VerifyEmailIn):
+    try:
+        uid = force_str(urlsafe_base64_decode(payload.uidb64))  
+        user = get_user_model().objects.get(pk=uid)
+    except(TypeError, ValueError, OverflowError, User.DoesNotExist):  
+        user = None  
+    if user is not None and CustomTokenGenerator.check_token(user, payload.token):  
+        user.is_email_verified = True  
+        user.save()
+        return 200, {"success": "Email verified"}
+    else:
+        return 400, {"error": "somthing went wrong"}
 
 # @api.post("/forget-password/", response=, tags=["auth"])
 # def forget_password(request,  payload: )
 
-# @api.post("/password-reset/", response=, tags=["auth"])
+# @api.post("/reset-password/", response=, tags=["auth"])
 # def reset_password(request, payload: )

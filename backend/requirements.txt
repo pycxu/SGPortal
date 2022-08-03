@@ -1,3 +1,4 @@
 Django
 django-ninja
 djangorestframework-simplejwt
+six
