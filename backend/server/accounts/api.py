@@ -61,16 +61,15 @@ def login(request,  payload: LoginIn):
     # TODO: email verification
     user = authenticate(username=payload.email, password=payload.password)
     if user is not None:
-        refresh = RefreshToken.for_user(user)
-        update_last_login(None, user)
-        return 200, {
-        'refresh': str(refresh),
-        'access': str(refresh.access_token),
-        }
-        # if user.is_email_verified == True:
-        #     return 200, {"success": "logged in"}
-        # else:
-        #     return 400, {"error": "email not verified"}
+        if user.is_email_verified == True:
+            refresh = RefreshToken.for_user(user)
+            update_last_login(None, user)
+            return 200, {
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            }
+        else:
+            return 400, {"error": "email not verified"}
     return 400, {"error": "somthing went wrong"}
 
 class UserIn(ModelSchema):
