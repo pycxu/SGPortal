@@ -47,8 +47,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(db_index=True, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
-    email_verification_token = models.CharField(max_length=300, blank=True)
-    password_reset_token = models.CharField(max_length=300, blank=True)
 
     # role
     USER_TYPE_CHOICES = (
