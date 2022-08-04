@@ -155,7 +155,7 @@ def forget_password(request,  payload: ForgetPassWordIn):
         username = user.username
         domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        token = PasswordResetTokenGenerator.make_token(user)
+        token = PasswordResetTokenGenerator().make_token(user)
 
         message = f"Hi {username},\nPlease click on the link to reset your password.\nhttp://{domain}/reset-password/{uid}/{token}/ "
         user.email_user('Password reset', message)
@@ -175,7 +175,7 @@ def reset_password(request, payload: ForgetPassWordIn):
         user = get_user_model().objects.get(pk=uid)
     except(TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):  
         user = None  
-    if user is not None and PasswordResetTokenGenerator.check_token(user, payload.token):  
+    if user is not None and PasswordResetTokenGenerator().check_token(user, payload.token):  
         user.set_password(payload.password)
         user.save()
         return 200, {"success": "Reset password"}
