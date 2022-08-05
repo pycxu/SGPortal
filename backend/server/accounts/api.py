@@ -29,22 +29,22 @@ class SuccessOut(Schema):
 
 @api.post("/signup-consumer/", response={200: SignUpConsumerOut, 400: ErrorOut}, tags=["auth"])
 def create_consumer(request,  payload: SignUpConsumerIn):
-    # TODO: email verification
     try:
         # create new user
         new_user = get_user_model().objects.create_user(**payload.dict())
-        new_user.user_type = 1 
-        new_user.save()
+        if new_user is not None:
+            new_user.user_type = 1 
+            new_user.save()
 
-        # generate email activation link
-        username = new_user.username
-        domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
-        uid = urlsafe_base64_encode(force_bytes(new_user.pk))
-        token = EmailVerifyTokenGenerator.make_token(new_user)
+            # generate email activation link
+            username = new_user.username
+            domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
+            uid = urlsafe_base64_encode(force_bytes(new_user.pk))
+            token = EmailVerifyTokenGenerator.make_token(new_user)
 
-        message = f"Hi {username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
-        new_user.email_user('Email verification', message)
-        return 200, {"id": new_user.id}
+            message = f"Hi {username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
+            new_user.email_user('Email verification', message)
+            return 200, {"id": new_user.id}
     except:
         return 400, {"error": "somthing went wrong"}
 
