@@ -4,11 +4,10 @@ from typing import List
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate, login
 from django.contrib.auth.models import update_last_login
-from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from .token import EmailVerifyTokenGenerator 
+from .token import EmailVerifyTokenGenerator, AuthTokenGenerator
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0", urls_namespace='accounts_api')
@@ -63,7 +62,7 @@ def login(request,  payload: LoginIn):
     user = authenticate(username=payload.email, password=payload.password)
     if user is not None:
         if user.is_email_verified == True:
-            refresh = RefreshToken.for_user(user)
+            refresh = AuthTokenGenerator.get_token(user)
             update_last_login(None, user)
             return 200, {
             'refresh': str(refresh),
