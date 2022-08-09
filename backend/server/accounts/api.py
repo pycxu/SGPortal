@@ -7,7 +7,7 @@ from django.contrib.auth.models import update_last_login
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from .token import EmailVerifyTokenGenerator, AuthTokenGenerator
+from .tokens import EmailVerifyTokenGenerator, AuthTokenGenerator
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from typing import Any, Optional
 from django.http import HttpRequest
@@ -120,18 +120,11 @@ def get_all_users(request):
     users = get_user_model().objects.all()
     return users
 
-@api.get("/users/{user_id}", response={200: UserOut, 401: ErrorOut}, tags=["users"], auth=JWTAuthGuard())
+@api.get("/users/{user_id}", response=UserOut, tags=["users"], auth=JWTAuthGuard())
 @IDORCheck
 def get_user_by_id(request, user_id: int):
     user = get_object_or_404(get_user_model(), id=user_id)
-    return 200, user
-    # access_token = request.headers['Authorization'].split(" ")[1]
-    # _user_id = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])['user_id']
-    # if _user_id == user_id:
-    #     user = get_object_or_404(get_user_model(), id=user_id)
-    #     return 200, user
-    # else: 
-    #     return 401, {"error": "Not Authorised"}
+    return user
 
 class UpdateUserIn(ModelSchema):
     class Config:
