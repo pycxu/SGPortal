@@ -9,8 +9,24 @@ from django.utils.encoding import force_bytes, force_str
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .token import EmailVerifyTokenGenerator, AuthTokenGenerator
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from typing import Any, Optional
+from django.http import HttpRequest
+from ninja.security import HttpBearer
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0", urls_namespace='accounts_api')
+
+class JWTAuthGuard(HttpBearer):
+    def authenticate(self, request: HttpRequest, token: str) -> Optional[Any]:
+        jwt_authenticator = JWTAuthentication()
+        try:
+            response = jwt_authenticator.authenticate(request)
+            if response is not None:
+                return True # 200 OK
+            return False # 401
+        except Exception:
+            # Any exception we want it to return False i.e 401
+            return False
 
 class SignUpConsumerIn(ModelSchema):
     class Config:
