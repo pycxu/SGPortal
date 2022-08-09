@@ -11,7 +11,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .token import EmailVerifyTokenGenerator 
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
-api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0")
+api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0", urls_namespace='accounts_api')
 
 class SignUpConsumerIn(ModelSchema):
     class Config:
@@ -27,7 +27,7 @@ class ErrorOut(Schema):
 class SuccessOut(Schema):
     success: str
 
-@api.post("/signup-consumer/", response={200: SignUpConsumerOut, 400: ErrorOut}, tags=["auth"])
+@api.post("/signup/consumer/", response={200: SignUpConsumerOut, 400: ErrorOut}, tags=["auth"])
 def create_consumer(request,  payload: SignUpConsumerIn):
     try:
         # create new user
