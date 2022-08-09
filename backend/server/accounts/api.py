@@ -13,6 +13,7 @@ from typing import Any, Optional
 from django.http import HttpRequest
 from ninja.security import HttpBearer
 from rest_framework_simplejwt.authentication import JWTAuthentication
+import jwt
 
 api = NinjaAPI(title="API_ACCOUNTS", version="1.0.0", urls_namespace='accounts_api')
 
@@ -103,17 +104,22 @@ def get_all_users(request):
     users = get_user_model().objects.all()
     return users
 
-@api.get("/users/{user_id}", response=UserOut, tags=["users"])
+@api.get("/users/{user_id}", response={200: UserOut, 401: ErrorOut}, tags=["users"])
 def get_user_by_id(request, user_id: int):
-    user = get_object_or_404(get_user_model(), id=user_id)
-    return user
+    access_token = request.headers['Authorization'].split(" ")[1]
+    _user_id = jwt.decode(access_token, settings.SECRET_KEY, algorithms=["HS256"])['user_id']
+    if _user_id == user_id:
+        user = get_object_or_404(get_user_model(), id=user_id)
+        return 200, user
+    else: 
+        return 401, {"error": "Not Authorised"}
 
 class UpdateUserIn(ModelSchema):
     class Config:
         model = get_user_model()
         model_fields = ['username']
 
-@api.put("/users/{user_id}", response=UserOut, tags=["users"])
+@api.put("/users/{user_id}", response=UserOut, tags=["users"], auth=JWTAuthGuard())
 def update_user_by_id(request, user_id: int, payload: UpdateUserIn):
     user = get_object_or_404(get_user_model(), id=user_id)
     for attr, value in payload.dict().items():
