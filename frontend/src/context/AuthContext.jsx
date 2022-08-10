@@ -38,19 +38,22 @@ export const AuthProvider = ({children}) => {
 
     let loginUser = async (e) => {
         e.preventDefault()
-        let response = await axios.post(`${baseURL}/accounts/login/`, {
-            email: e.target.email.value,
-            password: e.target.password.value
-        })
-        let jwt_tokenPair = response.data
-        if(response.status === 200) {
-            setAuthTokens(jwt_tokenPair)
-            setUser(decodeToken(jwt_tokenPair.access))
-            localStorage.setItem('authTokens', JSON.stringify(jwt_tokenPair))
-            navigate('/dashboard')
-        }else {
-            alert('something went wrong!')
+        try {
+            let response = await axios.post(`${baseURL}/accounts/login/`, {
+                email: e.target.email.value,
+                password: e.target.password.value
+            })
+            let jwt_tokenPair = response.data
+            if(response.status === 200) {
+                setAuthTokens(jwt_tokenPair)
+                setUser(decodeToken(jwt_tokenPair.access))
+                localStorage.setItem('authTokens', JSON.stringify(jwt_tokenPair))
+                navigate('/dashboard')
+            }
+        } catch (error) {
+            console.log(error);
         }
+
 
     }
 

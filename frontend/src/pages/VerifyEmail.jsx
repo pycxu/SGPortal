@@ -9,6 +9,9 @@ const VerifyEmail = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    if(!uidb64 || !token) {
+        navigate('/')
+    }
     verifyEmail(baseURL, uidb64, token)
   }, [uidb64, token])
 

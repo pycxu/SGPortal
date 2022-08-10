@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     let {loginUser} = useContext(AuthContext)
@@ -10,6 +11,7 @@ const Login = () => {
             <input type="password" name="password" placeholder="Password" />
             <input type="submit" />
         </form>
+        <Link to="/forget-password">Forget Password</Link>
     </div>
   )
 }
