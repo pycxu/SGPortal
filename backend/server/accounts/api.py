@@ -62,6 +62,22 @@ class SuccessOut(Schema):
 @api.post("/signup/consumer/", response={200: SignUpConsumerOut, 400: ErrorOut}, tags=["auth"])
 def create_consumer(request,  payload: SignUpConsumerIn):
     try:
+        # check if user exists
+        user = get_user_model().objects.filter(email=payload.email.lower()).first()
+        if user is not None and user.is_active:
+            if user.is_email_verified:
+                return 400, {"error": "user already exists"}
+            else:
+                # generate email activation link
+                username = user.username
+                domain = "localhost:5173" # get from env
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
+                token = EmailVerifyTokenGenerator.make_token(user)
+
+                message = f"Hi {username},\nPlease click on the link to activate your account.\nhttp://{domain}/verify-email/{uid}/{token}/ "
+                user.email_user('Email verification', message)
+                return 400, {"error": "user already exists, plz verify your email and login"}
+
         # create new user
         new_user = get_user_model().objects.create_user(**payload.dict())
         if new_user is not None:
@@ -70,7 +86,7 @@ def create_consumer(request,  payload: SignUpConsumerIn):
 
             # generate email activation link
             username = new_user.username
-            domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
+            domain = "localhost:5173"
             uid = urlsafe_base64_encode(force_bytes(new_user.pk))
             token = EmailVerifyTokenGenerator.make_token(new_user)
 
@@ -186,7 +202,7 @@ def forget_password(request,  payload: ForgetPassWordIn):
     if user is not None and user.is_active:
         # generate reset password link
         username = user.username
-        domain = "localhost:3000" # domain = get_current_site(request).domain when we have a frontend
+        domain = "localhost:5173" # get from env
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         token = PasswordResetTokenGenerator().make_token(user)
 
