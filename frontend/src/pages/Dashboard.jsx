@@ -17,9 +17,9 @@ const Dashboard = () => {
   let getProfile = async () => {
     try {
         let response = await api.get(`accounts/users/${user.user_id}`)
-        console.log("profile res", response);
+        console.log('profile res', response);
         if(response.status === 200) {
-            console.log("dashboard res", response.data.username)
+            console.log('dashboard res', response.data.username)
             setProfile(response.data)
             setLoading(false)
         }

@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { isExpired, decodeToken } from "react-jwt";
+import { isExpired, decodeToken } from 'react-jwt';
 import axios from 'axios'
 
 import AuthContext from '../context/AuthContext'
@@ -15,7 +15,7 @@ const useAxios = () => {
     })
 
     axiosInstance.interceptors.request.use(async req => {
-        console.log("is token expired: ", isExpired(authTokens.access))
+        console.log('is token expired: ', isExpired(authTokens.access))
         if(!isExpired(authTokens.access)) return req
         try {
             const response = await axios.post(`${baseURL}/token/refresh/`, {

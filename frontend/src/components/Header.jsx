@@ -4,7 +4,6 @@ import AuthContext from '../context/AuthContext';
 
 const Header = () => {
   let {user, logoutUser} = useContext(AuthContext)
-  console.log("user: ", user)
   return (
     <div>
         {!user?<Link to="/">Signup</Link>:null}
