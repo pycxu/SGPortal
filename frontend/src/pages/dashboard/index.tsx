@@ -8,15 +8,16 @@ import AuthContext from '../../common/contexts/AuthContext'
 
 export default function Dashboard() {
   const axiosBearer = useAxios()
-  const { user } = useContext(AuthContext)
+  const { user, logoutUser } = useContext(AuthContext)
   const onSuccess = (data) => {
     console.log('success', data)
   }
 
-  const onError = (data) => {
-    console.log('error', data)
+  const onError = (error) => {
+    console.log('error', error)
+    logoutUser()
   }
-  const { isLoading, data, isError, error } = useUserProfile(axiosBearer, user.user_id, onSuccess, onError)
+  const { isLoading, data } = useUserProfile(axiosBearer, user.user_id, onSuccess, onError)
 
   if (isLoading) return <p>Loading...</p>
 
