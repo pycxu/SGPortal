@@ -1,7 +1,8 @@
-import { useContext } from 'react'
-import { isExpired, decodeToken } from 'react-jwt'
 import AuthContext from '../common/contexts/AuthContext'
 import axios from 'axios'
+
+import { useContext } from 'react'
+import { isExpired, decodeToken } from 'react-jwt'
 
 const baseURL = import.meta.env.VITE_BACKEND_BASE_URL
 

@@ -1,37 +1,29 @@
-import React, { useContext, useState, useEffect } from 'react'
-import AuthContext from '../../common/contexts/AuthContext'
 import useAxios from '../../hooks/useAxios'
+import { useContext } from 'react'
+import { useUserProfile } from '../../hooks/useUserProfile'
+
+import { Stack } from '@mui/material'
+import * as Typography from '../../common/components/typography'
+import AuthContext from '../../common/contexts/AuthContext'
 
 export default function Dashboard() {
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const { user, logoutUser } = useContext(AuthContext)
-
-  const api = useAxios()
-
-  useEffect(() => {
-    getProfile()
-  }, [])
-
-  const getProfile = async () => {
-    try {
-      const response = await api.get(`accounts/users/${user.user_id}`)
-      console.log('profile res', response)
-      if (response.status === 200) {
-        setProfile(response.data)
-        setLoading(false)
-      }
-    } catch (error) {
-      logoutUser()
-    }
+  const axiosBearer = useAxios()
+  const { user } = useContext(AuthContext)
+  const onSuccess = (data) => {
+    console.log('success', data)
   }
 
-  if (loading) return <p>Loading...</p>
+  const onError = (data) => {
+    console.log('error', data)
+  }
+  const { isLoading, data, isError, error } = useUserProfile(axiosBearer, user.user_id, onSuccess, onError)
+
+  if (isLoading) return <p>Loading...</p>
 
   return (
-    <>
-      <div>Dashboard</div>
-      <p>hi {profile.username}</p>
-    </>
+    <Stack>
+      <Typography.H4>Dashboard</Typography.H4>
+      <Typography.P>Hi {data.username}</Typography.P>
+    </Stack>
   )
 }
