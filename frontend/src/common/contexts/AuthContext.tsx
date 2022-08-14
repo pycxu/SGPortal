@@ -20,14 +20,22 @@ export const AuthProvider = ({ children }) => {
   const baseURL = import.meta.env.VITE_BACKEND_BASE_URL
   const navigate = useNavigate()
 
-  let signupUser = async (data) => {
+  const signupConsumer = async (data) => {
+    const response = await axios.post(`${baseURL}/accounts/signup/consumer/`, {
+      username: data.username,
+      email: data.email,
+      password: data.password,
+    })
+    return response.data
+  }
+
+  const signupUser = async (data) => {
     try {
       let response = await axios.post(`${baseURL}/accounts/signup/consumer/`, {
         username: data.username,
         email: data.email,
         password: data.password,
       })
-      console.log(response)
       if (response.status === 200) {
         // progress par 2
         alert('Thank you for signing up! Plz verify your email!')
@@ -35,7 +43,7 @@ export const AuthProvider = ({ children }) => {
         alert(response.statusText)
       }
     } catch (error) {
-      console.log("error res:", error)
+      console.log('error res:', error)
       alert(error.response.data.error)
     }
   }
@@ -68,6 +76,7 @@ export const AuthProvider = ({ children }) => {
 
   let contextValue = {
     baseURL,
+    signupConsumer,
     signupUser,
     loginUser,
     logoutUser,
