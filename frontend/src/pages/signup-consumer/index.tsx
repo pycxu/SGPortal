@@ -1,17 +1,18 @@
 import { useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm, Controller } from 'react-hook-form'
+import { useNavigate, Link } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { isNil } from 'lodash';
 import AuthContext from '../../common/contexts/AuthContext'
 
-import { TextField, Stack, FormHelperText } from '@mui/material'
+import { TextField, Stack } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import * as yup from 'yup'
 import * as Typography from '../../common/components/typography'
 
 export default function SignupConsuer() {
   const { signupConsumer } = useContext(AuthContext)
+  const navigate = useNavigate()
 
   const schema = yup.object().shape({
     username: yup
@@ -25,17 +26,19 @@ export default function SignupConsuer() {
     control,
     handleSubmit,
     setError,
-    unregister,
     formState: { errors },
   } = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
-  const { mutate: register, data } = useMutation((userData) => signupConsumer(userData), {
+  const { mutate: register, isLoading } = useMutation((userData) => signupConsumer(userData), {
     onSuccess: () => {
-      console.log('registered: ', data)
+      navigate('/signup-success', { replace: true })
     },
     onError: (error) => {
-      console.log(error.response.data.id)
-      setError(error.response.data.id, { type: 'server', message: error.response.data.error })
+      if (error.response.status === 409) {
+        setError(error.response.data.id, { type: 'server', message: error.response.data.error })
+      } else if (error.response.status === 422) {
+        navigate('/signup-success', { replace: true })
+      }
     },
   })
 
@@ -99,10 +102,22 @@ export default function SignupConsuer() {
             />
           )}
         />
-        <LoadingButton type='submit' sx={{ backgroundColor: '#00AFC5', width: '100%', py: '10px' }}>
+        <LoadingButton
+          loading={isLoading}
+          type='submit'
+          sx={{ backgroundColor: '#00AFC5', width: '100%', py: '10px' }}
+        >
           <Typography.P styles={{ color: '#fff', textTransform: 'none' }}>Sign Up</Typography.P>
         </LoadingButton>
       </form>
+      <Stack direction='row' justifyContent='center' alignItems='center' spacing={1}>
+        <Typography.P>Already registered?</Typography.P>
+        <Link to='/login'>
+          <Typography.P styles={{ color: '#F84283', testDecoration: 'underline' }}>
+            Login now!
+          </Typography.P>
+        </Link>
+      </Stack>
     </Stack>
   )
 }

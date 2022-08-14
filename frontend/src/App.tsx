@@ -3,6 +3,7 @@ import PrivateRoute from './modules/privateRoute'
 
 import Layout from './modules/layout'
 import SignupConsumer from './pages/signup-consumer'
+import SignupSuccess from './pages/signup-success';
 import Login from './pages/login'
 import ForgetPassword from './pages/forget-password'
 import VerifyEmail from './pages/verify-email'
@@ -15,6 +16,7 @@ export default function App() {
     <Routes>
       <Route path='/' element={<Layout />}>
         <Route index element={<SignupConsumer />} />
+        <Route path='signup-success/' element={<SignupSuccess />} />
         <Route path='login' element={<Login />} />
         <Route path='forget-password' element={<ForgetPassword />} />
         <Route path='verify-email/:uidb64/:token/' element={<VerifyEmail />} />
