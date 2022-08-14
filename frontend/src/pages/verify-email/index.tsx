@@ -1,42 +1,32 @@
-import React, { useContext, useState, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import axios from 'axios'
+import { useMutation } from '@tanstack/react-query'
 import AuthContext from '../../common/contexts/AuthContext'
+import * as Typography from '../../common/components/typography'
 
 export default function VerifyEmail() {
-  const [isVerified, setIsVerified] = useState(false)
-  const { baseURL } = useContext(AuthContext)
+  const { verifyEmail } = useContext(AuthContext)
   const { uidb64, token } = useParams()
   const navigate = useNavigate()
+  const { mutate: verify, isLoading } = useMutation((userData) => verifyEmail(userData), {
+    onSuccess: () => {
+      setTimeout(() => {
+        navigate('/login')
+      }, 2000)
+    },
+    onError: (error) => {
+      console.log('verify email error ', error)
+    },
+  })
 
   useEffect(() => {
-    if (!uidb64 || !token) {
-      navigate('/')
+    const userData = {
+      uidb64,
+      token,
     }
-    verifyEmail(baseURL, uidb64, token)
-  }, [uidb64, token])
+    verify(userData)
+  }, [])
+  if (isLoading) return <Typography.P>Loading...</Typography.P>
 
-  useEffect(() => {
-    setTimeout(() => {
-      navigate('/login')
-    }, 2000)
-  }, [isVerified])
-
-  const verifyEmail = async (baseURL, uidb64, token) => {
-    try {
-      let response = await axios.post(`${baseURL}/accounts/verify-email/`, {
-        uidb64,
-        token,
-      })
-      if (response.status === 200) {
-        setIsVerified(true)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  if (!isVerified) return <p>Loading...</p>
-
-  return <>{isVerified && <div>Verified! Redirecting to login page...</div>}</>
+  return <Typography.H4>Verified! Redirecting to login page...</Typography.H4>
 }

@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }) => {
   }
 
   const verifyEmail = async ({ uidb64, token }) => {
-    const response = await axios.post(`${baseURL}/accounts/verify-email//`, {
+    const response = await axios.post(`${baseURL}/accounts/verify-email/`, {
       uidb64,
       token,
     })
