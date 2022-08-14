@@ -5,7 +5,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AuthContext from '../../common/contexts/AuthContext'
 
-import { TextField, Stack } from '@mui/material'
+import { TextField, Stack, FormHelperText, Alert } from '@mui/material'
 import { LoadingButton } from '@mui/lab'
 import * as yup from 'yup'
 import * as Typography from '../../common/components/typography'
@@ -26,6 +26,7 @@ export default function SignupConsuer() {
     control,
     handleSubmit,
     setError,
+    clearErrors,
     formState: { errors },
   } = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
@@ -35,7 +36,7 @@ export default function SignupConsuer() {
     },
     onError: (error) => {
       if (error.response.status === 409) {
-        setError(error.response.data.id, { type: 'server', message: error.response.data.error })
+        setError('server', { type: 'server', message: error.response.data.error })
       } else if (error.response.status === 422) {
         navigate('/signup-success', { replace: true })
       }
@@ -57,6 +58,7 @@ export default function SignupConsuer() {
             <TextField
               {...field}
               sx={{ mb: 2 }}
+              onFocus={() => clearErrors('server')}
               type='text'
               label='Username'
               variant='filled'
@@ -66,7 +68,6 @@ export default function SignupConsuer() {
             />
           )}
         />
-        <br />
         <Controller
           name='email'
           control={control}
@@ -75,6 +76,7 @@ export default function SignupConsuer() {
             <TextField
               {...field}
               sx={{ mb: 2 }}
+              onFocus={() => clearErrors('server')}
               type='email'
               label='Email'
               variant='filled'
@@ -84,7 +86,6 @@ export default function SignupConsuer() {
             />
           )}
         />
-        <br />
         <Controller
           name='password'
           control={control}
@@ -93,6 +94,7 @@ export default function SignupConsuer() {
             <TextField
               {...field}
               sx={{ mb: 2 }}
+              onFocus={() => clearErrors('server')}
               type='password'
               label='Password'
               variant='filled'
@@ -102,6 +104,9 @@ export default function SignupConsuer() {
             />
           )}
         />
+        <FormHelperText error={!!errors.server} sx={{ mb: 2 }}>
+          {errors.server ? <Alert severity='error'>{errors.server?.message}</Alert> : ''}
+        </FormHelperText>
         <LoadingButton
           loading={isLoading}
           type='submit'

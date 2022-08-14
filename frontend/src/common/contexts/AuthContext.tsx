@@ -29,56 +29,50 @@ export const AuthProvider = ({ children }) => {
     return response.data
   }
 
-  const signupUser = async (data) => {
-    try {
-      let response = await axios.post(`${baseURL}/accounts/signup/consumer/`, {
-        username: data.username,
-        email: data.email,
-        password: data.password,
-      })
-      if (response.status === 200) {
-        // progress par 2
-        alert('Thank you for signing up! Plz verify your email!')
-      } else {
-        alert(response.statusText)
-      }
-    } catch (error) {
-      console.log('error res:', error)
-      alert(error.response.data.error)
-    }
+  const loginUser = async (data) => {
+    const response = await axios.post(`${baseURL}/accounts/login/`, {
+      email: data.email,
+      password: data.password,
+    })
+    return response.data
   }
 
-  let loginUser = async (e) => {
-    e.preventDefault()
-    try {
-      let response = await axios.post(`${baseURL}/accounts/login/`, {
-        email: e.target.email.value,
-        password: e.target.password.value,
-      })
-      let jwtTokenPair = response.data
-      if (response.status === 200) {
-        setAuthTokens(jwtTokenPair)
-        setUser(decodeToken(jwtTokenPair.access))
-        localStorage.setItem('authTokens', JSON.stringify(jwtTokenPair))
-        navigate('/dashboard')
-      }
-    } catch (error) {
-      console.log(error)
-    }
+  const storedAuthTokens = (authTokens) => {
+    setAuthTokens(authTokens)
+    setUser(decodeToken(authTokens.access))
+    localStorage.setItem('authTokens', JSON.stringify(authTokens))
   }
 
-  let logoutUser = () => {
+  const forgetPassword = async (data) => {
+    const response = await axios.post(`${baseURL}/accounts/forget-password/`, {
+      email: data.email,
+    })
+    return response.data
+  }
+
+  const resetPassword = async ({ uidb64, token, password }) => {
+    const response = await axios.post(`${baseURL}/accounts/reset-password/`, {
+      uidb64,
+      token,
+      password,
+    })
+    return response.data
+  }
+
+  const logoutUser = () => {
     setAuthTokens(null)
     setUser(null)
     localStorage.removeItem('authTokens')
     navigate('/login')
   }
 
-  let contextValue = {
+  const contextValue = {
     baseURL,
     signupConsumer,
-    signupUser,
     loginUser,
+    storedAuthTokens,
+    forgetPassword,
+    resetPassword,
     logoutUser,
     authTokens,
     setAuthTokens,
