@@ -8,22 +8,20 @@
         "eslint:recommended",
         "plugin:react/recommended",
         "plugin:@typescript-eslint/recommended",
-        "prettier"
+        "plugin:prettier/recommended"
     ],
+    "overrides": [],
     "parser": "@typescript-eslint/parser",
-    "ignorePatterns": [
-        "**/*.d.ts"
-    ],
     "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
+    "ignorePatterns": [
+        "**/*.d.ts",
+        "**/*.config.ts"
+    ],
     "plugins": [
         "react",
-        "react-hooks",
         "@typescript-eslint",
         "prettier"
     ],
@@ -36,10 +34,5 @@
             "single"
         ],
         "no-duplicate-imports": "error"
-    },
-    "settings": {
-        "import/resolver": {
-            "typescript": {}
-        }
     }
 }

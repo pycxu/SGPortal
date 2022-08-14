@@ -1,32 +1,35 @@
 import { Routes, Route } from 'react-router-dom'
-import PrivateRoute from './utils/PrivateRoute';
-import { AuthProvider } from './context/AuthContext'
+import PrivateRoute from './modules/privateRoute';
 
-import Signup from './pages/Signup';
-import Login from './pages/Login'
-import ForgetPassword from './pages/ForgetPassword'
-import VerifyEmail from './pages/VerifyEmail'
-import ResetPassword from './pages/ResetPassword'
-import Dashboard from './pages/Dashboard';
-import PageNotFound from './pages/PageNotFound'
-import Header from './components/Header'
+import Layout from './modules/layout'
+import SignupConsumer from './pages/signup-consumer';
+import Login from './pages/login'
+import ForgetPassword from './pages/forget-password'
+import VerifyEmail from './pages/verify-email'
+import ResetPassword from './pages/reset-password'
+import Dashboard from './pages/dashboard';
+import PageNotFound from './pages/page-not-found';
 
-function App() {
 
+export default function App() {
   return (
-    <AuthProvider>
-        <Header />
-        <Routes>
-          <Route index element={<Signup/>}/>
-          <Route path="login" element={<Login/>}/>
-          <Route path="forget-password" element={<ForgetPassword/>}/>
-          <Route path="verify-email/:uidb64/:token/" element={<VerifyEmail />} />
-          <Route path="reset-password/:uidb64/:token/" element={<ResetPassword />} />
-          <Route path="dashboard" element={<PrivateRoute><Dashboard/></PrivateRoute>}/>
-          <Route path="*" element={<PageNotFound/>}/>
-        </Routes>
-    </AuthProvider>
+    <Routes>
+      <Route path='/' element={<Layout />}>
+        <Route index element={<SignupConsumer />} />
+        <Route path='login' element={<Login />} />
+        <Route path='forget-password' element={<ForgetPassword />} />
+        <Route path='verify-email/:uidb64/:token/' element={<VerifyEmail />} />
+        <Route path='reset-password/:uidb64/:token/' element={<ResetPassword />} />
+        <Route
+          path='dashboard'
+          element={
+            <PrivateRoute>
+              <Dashboard />
+            </PrivateRoute>
+          }
+        />
+        <Route path='*' element={<PageNotFound />} />
+      </Route>
+    </Routes>
   )
 }
-
-export default App
