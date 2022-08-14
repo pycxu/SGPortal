@@ -59,6 +59,14 @@ export const AuthProvider = ({ children }) => {
     return response.data
   }
 
+  const verifyEmail = async ({ uidb64, token }) => {
+    const response = await axios.post(`${baseURL}/accounts/verify-email//`, {
+      uidb64,
+      token,
+    })
+    return response.data
+  }
+
   const logoutUser = () => {
     setAuthTokens(null)
     setUser(null)
@@ -67,12 +75,12 @@ export const AuthProvider = ({ children }) => {
   }
 
   const contextValue = {
-    baseURL,
     signupConsumer,
     loginUser,
     storedAuthTokens,
     forgetPassword,
     resetPassword,
+    verifyEmail,
     logoutUser,
     authTokens,
     setAuthTokens,

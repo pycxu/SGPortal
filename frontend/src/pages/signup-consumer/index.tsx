@@ -1,12 +1,17 @@
 import { useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
-import { useForm, Controller } from 'react-hook-form'
-import { useNavigate, Link } from 'react-router-dom'
+import { useForm, FormProvider } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AuthContext from '../../common/contexts/AuthContext'
 
-import { TextField, Stack, FormHelperText, Alert } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
+import { Stack } from '@mui/material'
+import {
+  FormTextFieldInput,
+  FormServerErrorHelperText,
+  FormLoadingButton,
+  FormPrompt,
+} from '../../common/components'
 import * as yup from 'yup'
 import * as Typography from '../../common/components/typography'
 
@@ -22,13 +27,7 @@ export default function SignupConsuer() {
     email: yup.string().email().required('Email is required'),
     password: yup.string().required('Password is required'),
   })
-  const {
-    control,
-    handleSubmit,
-    setError,
-    clearErrors,
-    formState: { errors },
-  } = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
+  const methods = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
   const { mutate: register, isLoading } = useMutation((userData) => signupConsumer(userData), {
     onSuccess: () => {
@@ -36,7 +35,7 @@ export default function SignupConsuer() {
     },
     onError: (error) => {
       if (error.response.status === 409) {
-        setError('server', { type: 'server', message: error.response.data.error })
+        methods.setError('server', { type: 'server', message: error.response.data.error })
       } else if (error.response.status === 422) {
         navigate('/signup-success', { replace: true })
       }
@@ -49,80 +48,16 @@ export default function SignupConsuer() {
   return (
     <Stack>
       <Typography.H3>Sign Up</Typography.H3>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Controller
-          name='username'
-          control={control}
-          defaultValue=''
-          render={({ field }) => (
-            <TextField
-              {...field}
-              sx={{ mb: 2 }}
-              onFocus={() => clearErrors('server')}
-              type='text'
-              label='Username'
-              variant='filled'
-              error={!!errors.username}
-              helperText={errors.username ? errors.username?.message : ''}
-              fullWidth
-            />
-          )}
-        />
-        <Controller
-          name='email'
-          control={control}
-          defaultValue=''
-          render={({ field }) => (
-            <TextField
-              {...field}
-              sx={{ mb: 2 }}
-              onFocus={() => clearErrors('server')}
-              type='email'
-              label='Email'
-              variant='filled'
-              error={!!errors.email}
-              helperText={errors.email ? errors.email?.message : ''}
-              fullWidth
-            />
-          )}
-        />
-        <Controller
-          name='password'
-          control={control}
-          defaultValue=''
-          render={({ field }) => (
-            <TextField
-              {...field}
-              sx={{ mb: 2 }}
-              onFocus={() => clearErrors('server')}
-              type='password'
-              label='Password'
-              variant='filled'
-              error={!!errors.password}
-              helperText={errors.password ? errors.password?.message : ''}
-              fullWidth
-            />
-          )}
-        />
-        <FormHelperText error={!!errors.server} sx={{ mb: 2 }}>
-          {errors.server ? <Alert severity='error'>{errors.server?.message}</Alert> : ''}
-        </FormHelperText>
-        <LoadingButton
-          loading={isLoading}
-          type='submit'
-          sx={{ backgroundColor: '#00AFC5', width: '100%', py: '10px' }}
-        >
-          <Typography.P styles={{ color: '#fff', textTransform: 'none' }}>Sign Up</Typography.P>
-        </LoadingButton>
-      </form>
-      <Stack direction='row' justifyContent='center' alignItems='center' spacing={1}>
-        <Typography.P>Already registered?</Typography.P>
-        <Link to='/login'>
-          <Typography.P styles={{ color: '#F84283', testDecoration: 'underline' }}>
-            Login now!
-          </Typography.P>
-        </Link>
-      </Stack>
+      <FormProvider {...methods}>
+        <form onSubmit={methods.handleSubmit(onSubmit)}>
+          <FormTextFieldInput name='username' type='text' label='Username' />
+          <FormTextFieldInput name='email' type='email' label='Email' />
+          <FormTextFieldInput name='password' type='password' label='Password' />
+          <FormServerErrorHelperText />
+          <FormLoadingButton isLoading={isLoading}>Sign Up</FormLoadingButton>
+        </form>
+      </FormProvider>
+      <FormPrompt title='Already registered?' action='Login now!' to='/login' />
     </Stack>
   )
 }
