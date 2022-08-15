@@ -1,5 +1,13 @@
+import { useContext } from 'react'
+import { Navigate } from 'react-router-dom'
+
 import * as Typography from '../../common/components/typography'
+import AuthContext from '../../common/contexts/AuthContext'
 
 export default function index() {
-  return <Typography.H4>Home</Typography.H4>
+  const { user } = useContext(AuthContext)
+  if (user) {
+    return <Navigate to='/dashboard' replace={true} />
+  }
+  return <Typography.H4>Home Page</Typography.H4>
 }

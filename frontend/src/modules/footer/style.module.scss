@@ -1,0 +1,61 @@
+.root {
+    margin-top: 100px;
+
+    @media (min-width: 768px) {
+        margin-top: 150px;
+    }
+}
+
+.container {
+    margin-bottom: 50px;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    @media (min-width: 768px) {
+        margin-left: 34px;
+        margin-right: 34px;
+    }
+}
+
+.vertical-space {
+    height: 20px;
+
+    @media (min-width: 768px) {
+        height: 30px;
+    }
+}
+
+.text1 {
+    text-align: left;
+    font-family: "arboria-book";
+    // backgroundColor: yellow;
+    color: #797979;
+    letter-spacing: 0px;
+    font-size: 16px;
+}
+
+.text2 {
+    text-align: left;
+    font-family: "arboria-book";
+    // backgroundColor: yellow;
+    color: #4d4d4d;
+    letter-spacing: 0px;
+    font-size: 16px;
+    // display: flex;
+}
+
+.logo-container {
+    // backgroundColor: #e8ffad;
+    height: 20.75px;
+    width: 110px;
+
+    @media (min-width: 768px) {
+        width: 130px;
+        height: 24.5px;
+    }
+}
+
+.img {
+    max-height: 24.5px;
+    max-width: 130px;
+}
