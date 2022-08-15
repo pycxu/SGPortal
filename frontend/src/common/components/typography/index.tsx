@@ -64,7 +64,7 @@ export const P = (props) => {
     w1024: '',
   }
   let marginBottom = { min: '0px', w320: '', w480: '', w768: '', w1024: '' }
-  let marginTop = { min: '0px', w320: '', w480: '', w768: '', w1024: '' }
+  const marginTop = { min: '0px', w320: '', w480: '', w768: '', w1024: '' }
 
   switch (comp) {
     case 'large':
@@ -264,7 +264,7 @@ export const H6 = (props) => {
   let font = Fonts.fontBold
   let weight = 700
   let color = Colors.Black1
-  let lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
+  const lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
   let fontSize = { min: '22px', w320: '', w480: '', w768: '', w1024: '' }
   let marginBottom = { min: '13px', w320: '', w480: '', w768: '', w1024: '' }
   let marginTop = {
@@ -382,10 +382,10 @@ export const H6 = (props) => {
 export const H4 = (props) => {
   const { children, selected, text, comp, ...other } = props
 
-  let font = Fonts.fontBold
-  let weight = 700
+  const font = Fonts.fontBold
+  const weight = 700
   let color = Colors.Black2
-  let lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
+  const lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
   let fontSize = {
     min: '17px',
     w320: Utils.cssLinearEq(17, 18, 320, 480),
@@ -393,8 +393,8 @@ export const H4 = (props) => {
     w768: Utils.cssLinearEq(18, 22, 768, 1024),
     w1024: '22px',
   }
-  let marginBottom = { min: '16px', w320: '', w480: '', w768: '', w1024: '' }
-  let marginTop = { min: '0px', w320: '', w480: '', w768: '', w1024: '' }
+  const marginBottom = { min: '16px', w320: '', w480: '', w768: '', w1024: '' }
+  const marginTop = { min: '0px', w320: '', w480: '', w768: '', w1024: '' }
 
   switch (comp) {
     case 'instructions':
@@ -423,7 +423,7 @@ export const H3 = (props) => {
   let font = Fonts.fontBold
   let weight = 700
   let color = Colors.Black1
-  let lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
+  const lineHeight = { min: '1.05', w320: '', w480: '', w768: '', w1024: '' }
   let fontSize = {
     min: '23px',
     w320: Utils.cssLinearEq(23, 31, 320, 480),
@@ -487,9 +487,9 @@ export const H2 = (props) => {
 
   let font = Fonts.fontBold
   let weight = 700
-  let color = Colors.Black1
+  const color = Colors.Black1
   let lineHeight = { min: '1.0', w320: '', w480: '', w768: '', w1024: '' }
-  let fontSize = {
+  const fontSize = {
     min: '26px',
     w320: Utils.cssLinearEq(26, 31, 320, 480),
     w480: '31px',

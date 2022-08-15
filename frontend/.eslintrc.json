@@ -25,6 +25,11 @@
         "@typescript-eslint",
         "prettier"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "rules": {
         "react/react-in-jsx-scope": "off",
         "camelcase": "error",
@@ -33,6 +38,7 @@
             "error",
             "single"
         ],
-        "no-duplicate-imports": "error"
+        "no-duplicate-imports": "error",
+        "react/prop-types": "off"
     }
 }

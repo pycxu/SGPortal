@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm, FormProvider } from 'react-hook-form'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AuthContext from '../../common/contexts/AuthContext'
 
@@ -10,7 +10,7 @@ import {
   FormTextFieldInput,
   FormServerErrorHelperText,
   FormLoadingButton,
-  FormPrompt
+  FormPrompt,
 } from '../../common/components'
 import * as yup from 'yup'
 import * as Typography from '../../common/components/typography'
@@ -25,11 +25,7 @@ export default function Login() {
   })
   const methods = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
-  const {
-    mutate: login,
-    data,
-    isLoading,
-  } = useMutation((userData) => loginUser(userData), {
+  const { mutate: login, isLoading } = useMutation((userData) => loginUser(userData), {
     onSuccess: (data) => {
       storedAuthTokens(data)
       navigate('/dashboard', { replace: true })

@@ -1,11 +1,11 @@
 import { useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm, FormProvider } from 'react-hook-form'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AuthContext from '../../common/contexts/AuthContext'
 
-import { Stack, CircularProgress } from '@mui/material'
+import { Stack } from '@mui/material'
 import {
   FormTextFieldInput,
   FormServerErrorHelperText,
@@ -13,7 +13,6 @@ import {
   FormPrompt,
 } from '../../common/components'
 import * as yup from 'yup'
-import * as Clickable from '../../common/components/clickable'
 import * as Typography from '../../common/components/typography'
 
 export default function SignupConsuer() {
