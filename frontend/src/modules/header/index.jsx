@@ -1,28 +1,37 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useMediaQuery, Drawer } from '@mui/material'
+import { isNil } from 'lodash'
+import AuthContext from '../../common/contexts/AuthContext'
 import { Link } from 'react-router-dom'
 import * as style from './style.module.scss'
 import * as Clickable from '../../common/components/clickable'
 
-export default function Header(props) {
+export default function Header() {
   const isWide = useMediaQuery('(min-width:800px)')
-  const [mobileOpen, setMobileOpen] = React.useState(false)
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const { user, logoutUser } = useContext(AuthContext)
+  const isLoggedIn = !isNil(user)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
   }
 
-  const [value, setValue] = React.useState(0)
-  const titles = [
+  const [value, setValue] = useState(0)
+  let titles = [
     { label: 'Sign Up', action: '/signup-consumer/' },
     { label: 'Login', action: '/login/' },
   ]
 
-  const sideMenuTitles = [
+  let sideMenuTitles = [
     { label: 'Home', action: '/' },
     ...titles,
     { label: 'Dashboard', action: '/Dashboard/' },
   ]
+
+  if (isLoggedIn) {
+    titles = []
+    sideMenuTitles = [{ label: 'Home', action: '/' }, ...titles, { label: 'Log out', action: '/' }]
+  }
 
   const handleChange = (event, newValue) => {
     // //console.log("newValue:", newValue);
@@ -47,9 +56,15 @@ export default function Header(props) {
     <div>
       <div className={style.root}>
         <div className={style.logoContainer}>
-          <Link to='/'>
-            <img src='/images/Logo_SOG_Colour.png' className={style.img} alt='' />
-          </Link>
+          {isLoggedIn ? (
+            <Link to='/dashboard'>
+              <img src='/images/logo.png' className={style.img} alt='' />
+            </Link>
+          ) : (
+            <Link to='/'>
+              <img src='/images/Logo_SOG_Colour.png' className={style.img} alt='' />
+            </Link>
+          )}
         </div>
         {isWide && (
           <div className={style.buttonsContainer}>
@@ -66,19 +81,31 @@ export default function Header(props) {
                 />
               )
             })}
-
-            <div className={style.getStartedContainer}>
-              <Clickable.Text
-                variant='text'
-                comp={2}
-                component={Link}
-                to={'/dashboard/'}
-                style={{ height: '50px', width: '100%' }}
-                // onClick={}
-              >
-                Dashboard
-              </Clickable.Text>
-            </div>
+            {isLoggedIn ? (
+              <div className={style.getStartedContainer}>
+                <Clickable.Text
+                  variant='text'
+                  comp={2}
+                  style={{ height: '50px', width: '100%' }}
+                  onClick={() => logoutUser()}
+                >
+                  Log Out
+                </Clickable.Text>
+              </div>
+            ) : (
+              <div className={style.getStartedContainer}>
+                <Clickable.Text
+                  variant='text'
+                  comp={2}
+                  component={Link}
+                  to={'/dashboard/'}
+                  style={{ height: '50px', width: '100%' }}
+                  // onClick={}
+                >
+                  Dashboard
+                </Clickable.Text>
+              </div>
+            )}
           </div>
         )}
         {!isWide && (
