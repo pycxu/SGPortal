@@ -2,5 +2,7 @@
     margin: 0;
     text-decoration: none;
     color: inherit;
-    font-family: Arboria-Bold, sans-serif;
+    font-family: arboria, sans-serif;
+    font-style: normal;
+    font-weight: 100;
 }

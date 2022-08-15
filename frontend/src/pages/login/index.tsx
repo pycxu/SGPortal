@@ -43,8 +43,8 @@ export default function Login() {
     login(userData)
   }
   return (
-    <Stack>
-      <Typography.H3>Log In</Typography.H3>
+    <Stack spacing={3}>
+      <Typography.H3 comp='survey'>Log In</Typography.H3>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FormTextFieldInput name='email' type='email' label='Email' />

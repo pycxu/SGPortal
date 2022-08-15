@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import PrivateRoute from './modules/privateRoute'
 
 import Layout from './modules/layout'
+import Home from './pages/home'
 import SignupConsumer from './pages/signup-consumer'
 import SignupSuccess from './pages/signup-success'
 import Login from './pages/login'
@@ -16,10 +17,11 @@ export default function App() {
   return (
     <Routes>
       <Route path='/' element={<Layout />}>
-        <Route index element={<SignupConsumer />} />
+        <Route index element={<Home />} />
+        <Route path='signup-consumer/' element={<SignupConsumer />} />
         <Route path='signup-success/' element={<SignupSuccess />} />
-        <Route path='login' element={<Login />} />
-        <Route path='forget-password' element={<ForgetPassword />} />
+        <Route path='login/' element={<Login />} />
+        <Route path='forget-password/' element={<ForgetPassword />} />
         <Route path='forget-password-success/' element={<ForgetPasswordSuccess />} />
         <Route path='verify-email/:uidb64/:token/' element={<VerifyEmail />} />
         <Route path='reset-password/:uidb64/:token/' element={<ResetPassword />} />

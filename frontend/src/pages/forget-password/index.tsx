@@ -37,8 +37,8 @@ export default function ForgetPassword() {
   }
 
   return (
-    <Stack>
-      <Typography.H4>Forget Password</Typography.H4>
+    <Stack spacing={3}>
+      <Typography.H3 comp='survey'>Forget Password</Typography.H3>
       <Typography.P>
         Tell us your email address, we will send you a link to reset your password
       </Typography.P>

@@ -45,8 +45,8 @@ export default function ResetPassword() {
   }
 
   return (
-    <Stack>
-      <Typography.H4>Reset Password</Typography.H4>
+    <Stack spacing={3}>
+      <Typography.H3 comp='survey'>Reset Password</Typography.H3>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FormTextFieldInput name='password' type='password' label='Password' />

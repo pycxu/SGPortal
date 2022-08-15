@@ -1,14 +1,17 @@
 import { createContext, useState } from 'react'
-
-import { decodeToken } from 'react-jwt'
 import { useNavigate } from 'react-router-dom'
+import { decodeToken } from 'react-jwt'
 import axios from 'axios'
 
-const AuthContext = createContext()
+const AuthContext = createContext({})
 
 export default AuthContext
 
-export const AuthProvider = ({ children }) => {
+type AuthProviderProps = {
+  children: React.ReactNode
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const storedAuthToken = localStorage.getItem('authTokens')
   const [authTokens, setAuthTokens] = useState(() =>
     storedAuthToken ? JSON.parse(storedAuthToken) : null,

@@ -1,0 +1,90 @@
+.tab {
+    height: 90px;
+    min-width: 100%;
+}
+
+.placeholder {
+    height: 60px;
+
+    @media (min-width: 768px) {
+        height: 80px;
+    }
+}
+
+.root {
+    height: 60px;
+    z-index: 100;
+
+    @media (min-width: 768px) {
+        height: 80px;
+    }
+
+    width: 100%;
+    background-color: white;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    display: flex;
+    // justifyContent: center;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logoContainer {
+    // width: 170px;
+    height: 100%;
+    // backgroundColor: #e8ffad;
+    position: relative;
+    margin-left: 19px;
+    width: 130px;
+
+    @media (min-width: 768px) {
+        margin-left: 34px;
+        width: 170px;
+    }
+}
+
+.buttonsContainer {
+    width: auto;
+    height: 100%;
+    // background-color: #cfc2c8;
+    display: flex;
+}
+
+.getStartedContainer {
+    width: 120px;
+    height: 100%;
+    // backgroundColor: #2982fc;
+    margin-right: 34px;
+    margin-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.xIcon {
+    margin: 10px;
+    width: 40px;
+    height: 40px;
+    float: right;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    margin-top: 160px;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    background-color: rgba(0, 0, 0, 0.5);
+}

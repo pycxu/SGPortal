@@ -1,11 +1,11 @@
 import { useContext } from 'react'
 import { useMutation } from '@tanstack/react-query'
 import { useForm, FormProvider } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import AuthContext from '../../common/contexts/AuthContext'
 
-import { Stack } from '@mui/material'
+import { Stack, CircularProgress } from '@mui/material'
 import {
   FormTextFieldInput,
   FormServerErrorHelperText,
@@ -13,6 +13,7 @@ import {
   FormPrompt,
 } from '../../common/components'
 import * as yup from 'yup'
+import * as Clickable from '../../common/components/clickable'
 import * as Typography from '../../common/components/typography'
 
 export default function SignupConsuer() {
@@ -46,8 +47,8 @@ export default function SignupConsuer() {
     register(userData)
   }
   return (
-    <Stack>
-      <Typography.H3>Sign Up</Typography.H3>
+    <Stack spacing={3}>
+      <Typography.H3 comp='survey'>Sign Up</Typography.H3>
       <FormProvider {...methods}>
         <form onSubmit={methods.handleSubmit(onSubmit)}>
           <FormTextFieldInput name='username' type='text' label='Username' />

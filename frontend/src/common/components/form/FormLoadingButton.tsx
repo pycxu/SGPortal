@@ -11,9 +11,20 @@ export default function FormLoadingButton({ children, isLoading }: FormLoadingBu
     <LoadingButton
       loading={isLoading}
       type='submit'
-      sx={{ backgroundColor: '#00AFC5', width: '100%', py: '10px' }}
+      sx={{
+        borderRadius: '0',
+        backgroundColor: '#00AFC5',
+        width: '100%',
+        py: '10px',
+        '&.MuiButtonBase-root:hover': {
+          backgroundColor: '#00AFC5',
+          opacity: 0.9,
+        },
+      }}
     >
-      <Typography.P styles={{ color: '#fff', textTransform: 'none' }}>{children}</Typography.P>
+      <Typography.P styles={{ color: '#fff', textTransform: 'none', fontSize: '18px' }}>
+        {children}
+      </Typography.P>
     </LoadingButton>
   )
 }
