@@ -55,17 +55,19 @@ export default function Header() {
   return (
     <div>
       <div className={style.root}>
-        <div className={style.logoContainer}>
-          {isLoggedIn ? (
+        {isLoggedIn ? (
+          <div className={style.logoContainerLoggIn}>
             <Link to='/dashboard'>
               <img src='/images/logo.png' className={style.img} alt='' />
             </Link>
-          ) : (
+          </div>
+        ) : (
+          <div className={style.logoContainer}>
             <Link to='/'>
               <img src='/images/Logo_SOG_Colour.png' className={style.img} alt='' />
             </Link>
-          )}
-        </div>
+          </div>
+        )}
         {isWide && (
           <div className={style.buttonsContainer}>
             {titles.map((item) => {
@@ -86,7 +88,7 @@ export default function Header() {
                 <Clickable.Text
                   variant='text'
                   comp={2}
-                  style={{ height: '50px', width: '100%' }}
+                  style={{ height: '50px', width: '100%', backgroundColor: '#F84283' }}
                   onClick={() => logoutUser()}
                 >
                   Log Out

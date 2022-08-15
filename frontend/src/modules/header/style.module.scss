@@ -44,6 +44,20 @@
     }
 }
 
+.logoContainerLoggIn {
+    // width: 170px;
+    height: 100%;
+    // backgroundColor: #e8ffad;
+    position: relative;
+    margin-left: 19px;
+    width: 86px;
+
+    @media (min-width: 768px) {
+        margin-left: 34px;
+        width: 115px;
+    }
+}
+
 .buttonsContainer {
     width: auto;
     height: 100%;
