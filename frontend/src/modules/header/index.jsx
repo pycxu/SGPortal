@@ -154,6 +154,22 @@ export default function Header() {
                 }}
               ></div>
               {sideMenuTitles.map((item) => {
+                if (item.label === 'Log out') {
+                  return (
+                    <Clickable.Text
+                      disableRipple
+                      comp={4}
+                      key={item.label}
+                      className={style.tab}
+                      onClick={() => {
+                        handleDrawerToggle()
+                        logoutUser()
+                      }}
+                    >
+                      {item.label}
+                    </Clickable.Text>
+                  )
+                }
                 return (
                   <Clickable.Text
                     disableRipple
