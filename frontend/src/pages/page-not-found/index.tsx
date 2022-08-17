@@ -6,7 +6,7 @@ export default function PageNotFound() {
   return (
     <Stack spacing={3}>
       <Typography.H4>404 Not Found</Typography.H4>
-      <RedirectButton to='/'>Home</RedirectButton>
+      <RedirectButton to='/portal'>Home</RedirectButton>
     </Stack>
   )
 }

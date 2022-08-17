@@ -28,7 +28,7 @@ export default function Login() {
   const { mutate: login, isLoading } = useMutation((userData) => loginUser(userData), {
     onSuccess: (data) => {
       storedAuthTokens(data)
-      navigate('/dashboard', { replace: true })
+      navigate('/portal', { replace: true })
     },
     onError: (error) => {
       methods.setError('server', { type: 'server', message: error.response.data.error })

@@ -7,7 +7,7 @@ import AuthContext from '../../common/contexts/AuthContext'
 export default function index() {
   const { user } = useContext(AuthContext)
   if (user) {
-    return <Navigate to='/dashboard' replace={true} />
+    return <Navigate to='/portal' replace={true} />
   }
   return <Typography.H4>Home Page</Typography.H4>
 }

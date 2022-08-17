@@ -25,7 +25,7 @@ export default function Header() {
   let sideMenuTitles = [
     { label: 'Home', action: '/' },
     ...titles,
-    { label: 'Dashboard', action: '/Dashboard/' },
+    { label: 'Portal', action: '/portal/' },
   ]
 
   if (isLoggedIn) {
@@ -55,19 +55,11 @@ export default function Header() {
   return (
     <div>
       <div className={style.root}>
-        {isLoggedIn ? (
-          <div className={style.logoContainerLoggIn}>
-            <Link to='/dashboard'>
-              <img src='/images/logo.png' className={style.img} alt='' />
-            </Link>
-          </div>
-        ) : (
-          <div className={style.logoContainer}>
-            <Link to='/'>
-              <img src='/images/Logo_SOG_Colour.png' className={style.img} alt='' />
-            </Link>
-          </div>
-        )}
+        <div className={style.logoContainer}>
+          <Link to='/'>
+            <img src='/images/Logo_SOG_Colour.png' className={style.img} alt='' />
+          </Link>
+        </div>
         {isWide && (
           <div className={style.buttonsContainer}>
             {titles.map((item) => {
@@ -100,11 +92,11 @@ export default function Header() {
                   variant='text'
                   comp={2}
                   component={Link}
-                  to={'/dashboard/'}
+                  to={'/portal/'}
                   style={{ height: '50px', width: '100%' }}
                   // onClick={}
                 >
-                  Dashboard
+                  Portal
                 </Clickable.Text>
               </div>
             )}
@@ -126,6 +118,7 @@ export default function Header() {
               anchor={'right'}
               open={mobileOpen}
               sx={{
+                zIndex: 1400,
                 '& .MuiDrawer-paper': { width: '100%', backgroundColor: '#00afc5' },
               }}
               ModalProps={{
