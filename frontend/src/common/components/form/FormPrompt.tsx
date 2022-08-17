@@ -13,7 +13,7 @@ export default function FormPrompt({ title, action, to }: FormPromptProps) {
     <Stack direction='row' justifyContent='center' alignItems='center' spacing={1}>
       <Typography.P>{title}</Typography.P>
       <Link to={to}>
-        <Typography.P styles={{ color: '#F84283', testDecoration: 'underline' }}>
+        <Typography.P styles={{ color: '#F84283', textDecoration: 'underline' }}>
           {action}
         </Typography.P>
       </Link>

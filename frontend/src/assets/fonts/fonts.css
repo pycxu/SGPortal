@@ -1,0 +1,39 @@
+/* @import  url("//hello.myfonts.net/count/3bec92"); */
+
+@font-face {
+  font-family: "arboria-bold";
+  font-style: normal;
+  font-weight: 700;
+  src: url("./arboria-bold.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "arboria-book";
+  font-style: normal;
+  font-weight: 400;
+  src: url("./arboria-book.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "arboria-medium";
+  font-style: normal;
+  font-weight: 500;
+  src: url("./arboria-medium.otf") format("opentype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "arboria-light";
+  font-style: normal;
+  /* font-weight: 500; */
+  src: url("./arboria-light.otf") format("opentype");
+  font-display: swap;
+}
+
+/* @font-face {
+  font-family: "Arboria-Light";
+  src: url("../webFonts/Arboria-Light/font.woff2") format("woff2"),
+    url("../webFonts/Arboria-Light/font.woff") format("woff");
+} */
