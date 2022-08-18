@@ -7,10 +7,6 @@ const AuthContext = createContext({})
 
 export default AuthContext
 
-type AuthProviderProps = {
-  children: React.ReactNode
-}
-
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const storedAuthToken = localStorage.getItem('authTokens')
   const [authTokens, setAuthTokens] = useState(() =>
@@ -23,37 +19,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const baseURL = import.meta.env.VITE_BACKEND_BASE_URL
   const navigate = useNavigate()
 
-  const signupConsumer = async (data) => {
+  const signupConsumer = async ({ username, email, password }: signupConsumerProps) => {
     const response = await axios.post(`${baseURL}/accounts/signup/consumer/`, {
-      username: data.username,
-      email: data.email,
-      password: data.password,
+      username,
+      email,
+      password,
     })
     return response.data
   }
 
-  const loginUser = async (data) => {
+  const loginUser = async ({ email, password }: loginUserProps) => {
     const response = await axios.post(`${baseURL}/accounts/login/`, {
-      email: data.email,
-      password: data.password,
+      email,
+      password,
     })
     return response.data
   }
 
-  const storedAuthTokens = (authTokens) => {
+  const storedAuthTokens = (authTokens: authTokensType) => {
     setAuthTokens(authTokens)
     setUser(decodeToken(authTokens.access))
     localStorage.setItem('authTokens', JSON.stringify(authTokens))
   }
 
-  const forgetPassword = async (data) => {
+  const forgetPassword = async ({ email }: forgetPasswordProps) => {
     const response = await axios.post(`${baseURL}/accounts/forget-password/`, {
-      email: data.email,
+      email,
     })
     return response.data
   }
 
-  const resetPassword = async ({ uidb64, token, password }) => {
+  const resetPassword = async ({ uidb64, token, password }: resetPasswordProps) => {
     const response = await axios.post(`${baseURL}/accounts/reset-password/`, {
       uidb64,
       token,
@@ -62,7 +58,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return response.data
   }
 
-  const verifyEmail = async ({ uidb64, token }) => {
+  const verifyEmail = async ({ uidb64, token }: verifyEmailProps) => {
     const response = await axios.post(`${baseURL}/accounts/verify-email/`, {
       uidb64,
       token,
